@@ -1,16 +1,16 @@
 'use client';
-import { POSTS_URL } from 'constants/constants';
+import { JSON_PLACEHOLDER_HOST, POSTS_URL } from '@/constants/constants';
 import React, { useEffect, useState } from 'react';
 import { Post } from '../../mocks/postsData';
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<Post[]>([]);
+  const [data, setData] = useState<Post[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(POSTS_URL);
+        const response = await fetch(JSON_PLACEHOLDER_HOST + POSTS_URL);
         const result = await response.json();
         if (response.ok) {
           setData(result);

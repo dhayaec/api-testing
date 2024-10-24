@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { TextEncoder } from 'util';
 import { server } from './mocks/server';
 

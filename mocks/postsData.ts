@@ -9,13 +9,13 @@ const posts: Post[] = [
   {
     userId: 1,
     id: 1,
-    title: 'Test data One',
+    title: 'Mocked Post 1',
     body: 'Test data One description',
   },
   {
     userId: 1,
     id: 2,
-    title: 'Test data Two',
+    title: 'Mocked Post 2',
     body: 'Test data Two description',
   },
 ];
