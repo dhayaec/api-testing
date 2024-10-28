@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../mocks/server';
 import { JSON_PLACEHOLDER_HOST, POSTS_URL } from '../constants/constants';
+import { metadata } from './layout';
 import Home from './page';
 
 describe('Home Component', () => {
@@ -35,6 +36,8 @@ describe('Home Component', () => {
     );
 
     render(<Home />);
+
+    expect(metadata.title).not.toBeNull();
 
     // Check that "Loading..." is displayed initially
     expect(screen.getByText(/Loading.../i)).toBeInTheDocument();

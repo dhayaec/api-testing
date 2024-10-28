@@ -1,29 +1,19 @@
 'use client';
-import { JSON_PLACEHOLDER_HOST, POSTS_URL } from '@/constants/constants';
-import React, { useEffect, useState } from 'react';
+import usePosts from '@/hooks/usePosts';
+import React from 'react';
 import { Post } from '../../mocks/postsData';
 
+function PostItem(props: { post: Post }) {
+  return (
+    <div className="border-b-2 border-s-orange-400 pb-2">
+      <h2 className="text-2xl">{props.post.title}</h2>
+      <p>{props.post.body}</p>
+    </div>
+  );
+}
+
 const Home: React.FC = () => {
-  const [data, setData] = useState<Post[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(JSON_PLACEHOLDER_HOST + POSTS_URL);
-        const result = await response.json();
-        if (response.ok) {
-          setData(result);
-        } else {
-          setError('Failed to fetch data');
-        }
-      } catch (err) {
-        setError('Error fetching data');
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { data, error } = usePosts();
 
   if (error) return <div>Error: {error}</div>;
   if (!data) return <div>Loading...</div>;
@@ -33,10 +23,7 @@ const Home: React.FC = () => {
       <h1>Posts</h1>
       <div>
         {data.map((post) => (
-          <div className="border-b-2 border-s-orange-400 pb-2" key={post.id}>
-            <h2 className="text-2xl">{post.title}</h2>
-            <p>{post.body}</p>
-          </div>
+          <PostItem key={post.id} post={post}></PostItem>
         ))}
       </div>
     </div>

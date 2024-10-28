@@ -1,4 +1,4 @@
-// pages/api/data.ts
+import { JSON_PLACEHOLDER_HOST, POSTS_URL } from '@/constants/constants';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -6,9 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const response = await fetch(
-      'https://jsonplaceholder.typicode.com/users/1/posts'
-    );
+    const response = await fetch(JSON_PLACEHOLDER_HOST + POSTS_URL);
     const data = await response.json();
 
     if (response.ok) {

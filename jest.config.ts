@@ -1,18 +1,3 @@
-// module.exports = {
-//   preset: 'ts-jest',
-//   testEnvironment: 'jest-fixed-jsdom',
-//   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-//   testEnvironmentOptions: {
-//     customExportConditions: [''],
-//   },
-//   globals: {
-//     Uint8Array: Uint8Array,
-//   },
-//   moduleNameMapper: {
-//     '^@/(.*)$': '<rootDir>/src/$1',
-//   },
-// };
-
 import nextJest from 'next/jest';
 
 const createJestConfig = nextJest({
