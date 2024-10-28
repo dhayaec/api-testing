@@ -47,25 +47,4 @@ describe('Home Component', () => {
       expect(screen.getByText(/Failed to fetch data/i)).toBeInTheDocument();
     });
   });
-
-  // it('renders error message on network error', async () => {
-  //   // Mock the server to return a network error
-  //   server.use(
-  //     http.get(JSON_PLACEHOLDER_HOST + POSTS_URL, () => {
-  //       return HttpResponse.json(null, { statusText: 'Failed to connect' });
-  //     })
-  //   );
-
-  //   render(<Home />);
-
-  //   // Check that "Loading..." is displayed initially
-  //   expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
-
-  //   // Wait for the network error message to appear
-  //   await waitFor(() => {
-  //     expect(
-  //       screen.getByText(/Error: Error fetching data/i)
-  //     ).toBeInTheDocument();
-  //   });
-  // });
 });
