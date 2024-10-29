@@ -1,14 +1,36 @@
 'use client';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 
 export default function SignIn() {
-  const handleSubmit = async (e: React.FormEvent) => {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const data = new FormData(e.target as HTMLFormElement);
-    await signIn('credentials', {
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    setError('');
+
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      // Redirect to dashboard on successful login
+      router.push('/dashboard');
+    } catch (err) {
+      setError('Invalid email or password');
+      setEmail('');
+      setPassword('');
+    }
   };
 
   return (
@@ -18,17 +40,26 @@ export default function SignIn() {
         className="card bg-base-100 shadow-xl p-8 w-full max-w-sm"
       >
         <h2 className="text-2xl font-bold mb-4">Sign In</h2>
+
+        {error && (
+          <div className="alert alert-error mb-4">
+            <span>{error}</span>
+          </div>
+        )}
+
         <input
-          name="email"
           type="email"
           placeholder="Email"
           className="input input-bordered w-full mb-4"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          name="password"
           type="password"
           placeholder="Password"
           className="input input-bordered w-full mb-4"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className="btn btn-primary w-full">
           Sign In
