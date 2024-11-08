@@ -9,6 +9,13 @@ const mockUser = {
   password: bcrypt.hashSync('password123', 10),
 };
 
+const mockSession = {
+  user: {
+    id: mockUser.id,
+    email: mockUser.email,
+  },
+};
+
 export const handlers = [
   // Success response
   http.get(JSON_PLACEHOLDER_HOST + POSTS_URL, () => {
@@ -41,6 +48,51 @@ export const handlers = [
     return HttpResponse.json(null, {
       status: 500,
       statusText: 'Invalid email or password',
+    });
+  }),
+
+  // Signup handler
+  http.post('/api/auth/signup', async ({ request }) => {
+    const info = await request.formData();
+    const { name, email, password } = info as never;
+
+    // Basic validation
+    if (!name || !email || !password) {
+      return HttpResponse.json(null, {
+        status: 400,
+        statusText: 'All fields are required',
+      });
+    }
+
+    // Simulate checking if the user already exists
+    if (email === mockUser.email) {
+      return HttpResponse.json(null, {
+        status: 400,
+        statusText: 'User already exists',
+      });
+    }
+
+    // Create a new mock user
+    const newUser = {
+      id: '2',
+      name,
+      email,
+      password: bcrypt.hashSync(password, 10), // Hash the password
+    };
+
+    // Normally, you would save this user in the database
+    // For mocking, just return the new user info
+    return HttpResponse.json(
+      { success: true, userId: newUser.id },
+      {
+        status: 201,
+      }
+    );
+  }),
+  http.get('/api/auth/session', () => {
+    // Simulate a successful session retrieval
+    return HttpResponse.json(mockSession, {
+      status: 200,
     });
   }),
 ];

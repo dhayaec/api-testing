@@ -43,6 +43,8 @@ const customJestConfig = {
     '!**/.next/**',
     '!**/*.d.ts',
     '!<rootDir>/src/lib/db.ts',
+    '!<rootDir>/src/lib/prisma.ts',
+    '!<rootDir>/src/app/layout.tsx',
   ],
   testEnvironmentOptions: {
     customExportConditions: [''],

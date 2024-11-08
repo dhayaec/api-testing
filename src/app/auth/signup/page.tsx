@@ -1,4 +1,5 @@
 'use client';
+import router from 'next/router';
 import { useState } from 'react';
 
 export default function SignUp() {
@@ -10,11 +11,14 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/auth/signup', {
+    const res = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),
     });
+    if (res?.ok) {
+      router.push('/dashboard');
+    }
   };
 
   return (

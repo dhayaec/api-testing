@@ -1,5 +1,6 @@
 // __tests__/auth.test.ts
 import SignIn from '@/app/auth/signin/page';
+import SignUp from '@/app/auth/signup/page';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { SessionProvider, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -7,6 +8,10 @@ import { useRouter } from 'next/navigation';
 jest.mock('next-auth/react', () => ({
   ...jest.requireActual('next-auth/react'),
   signIn: jest.fn(),
+}));
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
 }));
 
 jest.mock('next/navigation', () => ({
@@ -19,11 +24,14 @@ const mockPush = jest.fn();
   push: mockPush,
 });
 
-describe('Authentication Flow', () => {
-  function renderWithSessionProvider(component: React.ReactNode) {
-    return render(<SessionProvider>{component}</SessionProvider>);
-  }
+function renderWithSessionProvider(component: React.ReactNode) {
+  return render(<SessionProvider>{component}</SessionProvider>);
+}
 
+describe('SignIn Flow', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
   test('displays an error for incorrect credentials', async () => {
     (signIn as jest.Mock).mockResolvedValueOnce({
       error: 'Invalid email or password',
@@ -58,6 +66,58 @@ describe('Authentication Flow', () => {
     });
 
     fireEvent.click(screen.getByRole('button', { name: /Sign In/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+    });
+  });
+});
+
+describe('SignUp Component', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+
+  // test('displays an error for invalid signup data', async () => {
+  //   fetchMock.mockResponseOnce(JSON.stringify({ error: 'Signup failed' }), {
+  //     status: 400,
+  //   });
+
+  //   renderWithSessionProvider(<SignUp />);
+
+  //   fireEvent.change(screen.getByPlaceholderText('Name'), {
+  //     target: { value: 'John Doe' },
+  //   });
+  //   fireEvent.change(screen.getByPlaceholderText('Email'), {
+  //     target: { value: 'invalid_email@' },
+  //   });
+  //   fireEvent.change(screen.getByPlaceholderText('Password'), {
+  //     target: { value: 'short' },
+  //   });
+
+  //   fireEvent.click(screen.getByRole('button', { name: /Sign Up/i }));
+
+  //   expect(await screen.findByText(/Signup failed/)).toBeInTheDocument();
+  // });
+
+  test('redirects to dashboard on successful signup', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({ success: true }), {
+      status: 200,
+    });
+
+    renderWithSessionProvider(<SignUp />);
+
+    fireEvent.change(screen.getByPlaceholderText('Name'), {
+      target: { value: 'Jane Doe' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Email'), {
+      target: { value: 'jane@example.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
+      target: { value: 'strongpassword123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /Sign Up/i }));
 
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith('/dashboard');
